@@ -1,0 +1,53 @@
+name: ETH breakout alert
+
+on:
+  schedule:
+    - cron: "7 * * * *"
+  workflow_dispatch:
+    inputs:
+      test:
+        description: "Trimite doar un mesaj de test pe Telegram"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: eth-alert
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - run: pip install requests
+
+      - name: Verificare semnal
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          RISK_USD: "5"
+        run: |
+          BOT=$(ls ethbot*.py | head -n1)
+          if [ "${{ github.event.inputs.test }}" = "true" ]; then
+            python "$BOT" --test
+          else
+            python "$BOT" --once
+          fi
+
+      - name: Salveaza starea
+        run: |
+          if [ -f eth_breakout_state.json ]; then
+            git config user.name "eth-bot"
+            git config user.email "eth-bot@users.noreply.github.com"
+            git add eth_breakout_state.json
+            git diff --cached --quiet || (git commit -m "stare bot" && git push)
+          fi
