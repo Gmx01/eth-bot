@@ -1,1 +1,1 @@
-{"last_signal_candle": 1795219200000, "active": {"side": "short", "start_candle": 1795190400000, "entry": 1598.3, "sl": 1684.3178555507106, "tp": 1340.2464333478679, "exit_ts": 1795807754.3188515, "warned": false}, "heartbeat": "2026-11", "daily": "2026-11-21"}
+{"last_signal_candle": 1795219200000, "active": {"side": "short", "start_candle": 1795190400000, "entry": 1598.3, "sl": 1684.3178555507106, "tp": 1340.2464333478679, "exit_ts": 1795807754.3188515, "warned": false}, "heartbeat": "2026-11", "daily": "2026-11-21", "tg_offset": 617327613}
